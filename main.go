@@ -21,8 +21,6 @@ import (
 	"crypto/tls"
 	"flag"
 	"fmt"
-	"github.com/satori/go.uuid"
-	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -35,6 +33,9 @@ import (
 	"sync"
 	"syscall"
 	"unicode/utf8"
+
+	"github.com/satori/go.uuid"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 // A single result which comes from an individual web
@@ -633,14 +634,12 @@ func ProcessDirEntry(s *State, word string, resultChan chan<- Result) {
 
 func PrintDnsResult(s *State, r *Result) {
 	output := ""
-	if r.Status == 404 {
-		output = fmt.Sprintf("Missing: %s\n", r.Entity)
-	} else if s.ShowIPs {
-		output = fmt.Sprintf("Found: %s [%s]\n", r.Entity, r.Extra)
+	if s.ShowIPs {
+		output = fmt.Sprintf("%s,%s\n", r.Entity, r.Extra)
 	} else if s.ShowCNAME {
-		output = fmt.Sprintf("Found: %s [%s]\n", r.Entity, r.Extra)
+		output = fmt.Sprintf("%s,%s\n", r.Entity, r.Extra)
 	} else {
-		output = fmt.Sprintf("Found: %s\n", r.Entity)
+		output = fmt.Sprintf("%s\n", r.Entity)
 	}
 	fmt.Printf("%s", output)
 
